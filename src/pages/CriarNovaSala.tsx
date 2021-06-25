@@ -1,12 +1,35 @@
-import {Link} from 'react-router-dom'
+import {FormEvent, useState} from 'react'
+import {Link, useHistory} from 'react-router-dom'
 import illustrationImg from '../assets/images/illustration.svg'
 import logoImg from '../assets/images/logo.svg'
 import {Button} from '../components/Button'
 import '../styles/auth.scss'
 import { useAuth } from '../hooks/useAuth'
+import { database } from '../services/firebase'
 
-export function NovaSala(){
-    const{user} = useAuth()
+export function CriarNovaSala(){
+    const {user} = useAuth()
+    const history = useHistory()
+
+    const [novaSala, setNovaSala] = useState('')
+
+    async function handleCreateRoom(event:FormEvent) {
+        event.preventDefault()
+        if (novaSala.trim() ===''){
+            return
+        }
+
+        const roomRef = database.ref('salas')
+
+        const firebaseRoom = await roomRef.push({
+            title: novaSala,
+            authorID: user?.id,
+        })
+
+        history.push(`/salas/${firebaseRoom.key}`)
+        
+        
+    }
 
     return(
         <div id="page-auth">
@@ -22,10 +45,13 @@ export function NovaSala(){
                     <img src={user?.avatar} alt="Foto do usuário logado no sistema" />
                     <h2>Crie uma nova sala</h2>
 
-                    <form>
+                    <form onSubmit={handleCreateRoom}>
                         <input 
                             type="text"
                             placeholder="Nome da sala"
+                            value={novaSala}
+                            onChange={event => setNovaSala(event.target.value)}
+
                         />
                         <Button type="submit">
                             Criar sala
