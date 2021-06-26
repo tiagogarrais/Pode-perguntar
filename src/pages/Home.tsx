@@ -37,6 +37,12 @@ export function Home() {
             return
         }
 
+        if(roomRef.val().salaFinalizada){
+            alert("Esta sala foi encerrada")
+            return
+
+        }
+
         history.push(`/salas/${codigoSala}`)
     }
 
@@ -53,12 +59,11 @@ export function Home() {
             </aside>
             <main>
                 <div className="main-content">
-                    <a href="/">
                         <img
                             src={logoImg}
                             alt="Pode perguntar"
+                            //onClick={()=> (history.push('/'))}
                         />
-                    </a>
                     <button onClick={handleCreateRoom} className="create-room">
                         <img src={googleIconImg} alt="Logomarca do Google" />
                         Crie sua sala com o Google
