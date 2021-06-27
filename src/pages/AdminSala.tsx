@@ -38,9 +38,12 @@ export function AdminSala() {
     }
 
     async function handleMarcarComoRespondida(perguntaId: string) {
-        await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
-            respondida: true,
-        })
+        if (window.confirm("Esta ação vai bloquear esta pergunta, tem certeza?")) {
+            await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
+                respondida: true,
+            })
+        }
+
     }
 
     async function handleDeletaPergunta(perguntaId: string) {
@@ -88,7 +91,7 @@ export function AdminSala() {
                                 respondida={pergunta.respondida}
                                 emDestaque={pergunta.emDestaque}
                             >
-                                {!pergunta.respondida &&(
+                                {!pergunta.respondida && (
                                     <>
                                         <button
                                             type='button'
