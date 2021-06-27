@@ -8,12 +8,16 @@ type MostrarPerguntaProps = {
         avatar: string;
     };
     children?: ReactNode;
+    respondida?: boolean;
+    emDestaque?: boolean;
 }
 
 
 export function MostrarPergunta({
     duvida,
     autor,
+    respondida = false,
+    emDestaque = false,
     children,
 }: MostrarPerguntaProps) {
 

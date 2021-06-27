@@ -1,12 +1,18 @@
-import logoImg from '../assets/images/logo.svg'
-import deleteImg from '../assets/images/delete.svg'
-import { Button } from '../components/Button'
-import { CodigoSala } from '../components/CodigoSala'
 import { useHistory, useParams } from 'react-router-dom'
+
+import logoImg from '../assets/images/logo.svg'
+import checkImg from '../assets/images/check.svg'
+import answerImg from '../assets/images/answer.svg'
+import deleteImg from '../assets/images/delete.svg'
+
+
+import { Button } from '../components/Button'
 import { MostrarPergunta } from '../components/MostrarPergunta'
+import { CodigoSala } from '../components/CodigoSala'
 import { UseSala } from '../hooks/useSala'
-import '../styles/sala.scss'
 import { database } from '../services/firebase'
+
+import '../styles/sala.scss'
 
 type RoomParams = {
     id: string
@@ -14,11 +20,12 @@ type RoomParams = {
 
 export function AdminSala() {
 
+    const history = useHistory()
     const params = useParams<RoomParams>()
     const salaId = params.id
+    
     const { perguntas, titulo } = UseSala(salaId)
-    const history = useHistory()
-
+ 
     async function handleFinalizaSala() {
         await database.ref(`salas/${salaId}`).update({
             salaFinalizada: new Date(),
@@ -34,27 +41,28 @@ export function AdminSala() {
         }
     }
 
+    async function handleMarcarPerguntaComoRespondida(perguntaId: string) {
+            await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
+                respondida: true,
+            })
+    }
+
+    async function handleDarDestaquePergunta(perguntaId: string) {
+        await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
+            emDestaque: true,
+        })
+}
+
 
 
     return (
         <div id="page-room">
             <header>
                 <div className="content">
-                    <a href="/">
-                        <img
-                            src={logoImg}
-                            alt="Pode perguntar"
-                        />
-                    </a>
+                        <img src={logoImg} alt="Pode perguntar"/>
                     <div>
                         <CodigoSala codigo={salaId} />
-                        <Button
-                            isOutlined
-                            onClick={handleFinalizaSala}
-                        >
-                            Encerrar sala
-                        </Button>
-
+                        <Button isOutlined onClick={handleFinalizaSala}>Encerrar sala</Button>
                     </div>
                 </div>
             </header>
@@ -75,10 +83,23 @@ export function AdminSala() {
                             >
                                 <button
                                     type='button'
+                                    onClick={() => handleMarcarPerguntaComoRespondida(pergunta.id)}
+                                >
+                                    <img src={checkImg} alt="Marcar pergunta como respondida" />
+                                </button>
+
+                                <button
+                                    type='button'
+                                    onClick={() => handleDarDestaquePergunta(pergunta.id)}
+                                >
+                                    <img src={answerImg} alt="Dar destaque à pergunta" />
+                                </button>
+
+                                <button
+                                    type='button'
                                     onClick={() => handleDeletaPergunta(pergunta.id)}
                                 >
                                     <img src={deleteImg} alt="Remover pergunta" />
-
                                 </button>
 
                             </MostrarPergunta>
