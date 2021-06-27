@@ -26,7 +26,7 @@ export function Home() {
         event.preventDefault()
 
         if (codigoSala.trim() === '') {
-            alert("É necessário criar um nome para a sala")
+            alert("É necessário incluir um nome para criar a sala")
             return
         }
 
@@ -40,8 +40,14 @@ export function Home() {
         if(roomRef.val().salaFinalizada){
             alert("Esta sala foi encerrada")
             return
-
         }
+
+        if(roomRef.val().authorID === user?.id){
+            history.push(`/admin/salas/${codigoSala}`)
+            return
+        }
+
+        console.log(roomRef.val())
 
         history.push(`/salas/${codigoSala}`)
     }
