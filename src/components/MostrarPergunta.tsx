@@ -1,5 +1,6 @@
 import '../styles/mostrar-pergunta.scss'
 import {ReactNode} from 'react'
+import cx from 'classnames'
 
 type MostrarPerguntaProps = {
     duvida: string;
@@ -22,7 +23,13 @@ export function MostrarPergunta({
 }: MostrarPerguntaProps) {
 
     return (
-        <div className="mostrar-pergunta">
+        <div 
+            className={cx(
+                'mostrar-pergunta',
+                {respondida: respondida},
+                {emdestaque: emDestaque && !respondida}
+                )}
+        >
             <p>
                 {duvida}
             </p>
