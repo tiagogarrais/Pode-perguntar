@@ -1,5 +1,9 @@
 import logoImg from '../assets/images/logo.svg'
 import deleteImg from '../assets/images/delete.svg'
+import checkImg from '../assets/images/check.svg'
+import answerImg from '../assets/images/answer.svg'
+
+
 import { Button } from '../components/Button'
 import { CodigoSala } from '../components/CodigoSala'
 import { useHistory, useParams } from 'react-router-dom'
@@ -23,18 +27,27 @@ export function AdminSala() {
         await database.ref(`salas/${salaId}`).update({
             salaFinalizada: new Date(),
         })
-        
+
         history.push('/');
     }
 
+    async function handleManterPerguntaDestacada(perguntaId: string) {
+        await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
+            emDestaque: true,
+        })
+    }
+
+    async function handleMarcarComoRespondida(perguntaId: string) {
+        await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).update({
+            respondida: true,
+        })
+    }
 
     async function handleDeletaPergunta(perguntaId: string) {
         if (window.confirm("Tem certeza que deseja excluir esta pergunta?")) {
             await database.ref(`salas/${salaId}/perguntas/${perguntaId}`).remove()
         }
     }
-
-
 
     return (
         <div id="page-room">
@@ -72,7 +85,29 @@ export function AdminSala() {
                                 key={pergunta.id}
                                 duvida={pergunta.duvida}
                                 autor={pergunta.autor}
+                                respondida={pergunta.respondida}
+                                emDestaque={pergunta.emDestaque}
                             >
+                                {!pergunta.respondida &&(
+                                    <>
+                                        <button
+                                            type='button'
+                                            onClick={() => handleMarcarComoRespondida(pergunta.id)}
+                                        >
+                                            <img src={checkImg} alt="Marcar pergunta como respondida" />
+
+                                        </button>
+
+                                        <button
+                                            type='button'
+                                            onClick={() => handleManterPerguntaDestacada(pergunta.id)}
+                                        >
+                                            <img src={answerImg} alt="Manter pergunta destacada" />
+
+                                        </button>
+                                    </>
+                                )}
+
                                 <button
                                     type='button'
                                     onClick={() => handleDeletaPergunta(pergunta.id)}

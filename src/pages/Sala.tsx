@@ -113,6 +113,8 @@ export function Sala() {
                                 key={pergunta.id}
                                 duvida={pergunta.duvida}
                                 autor={pergunta.autor}
+                                respondida={pergunta.respondida}
+                                emDestaque={pergunta.emDestaque}
                             >
                                 {!pergunta.respondida && (
                                     <button
